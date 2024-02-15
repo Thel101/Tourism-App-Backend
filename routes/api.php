@@ -15,6 +15,7 @@ Route::get('/content/{id}',[ContentsController::class, 'getContent']);
 Route::get('/contents/image/{filename}',[ContentsController::class,'getImage']);
 Route::post('/content/update',[ContentsController::class, 'editContent']);
 Route::delete('/content/delete/{id}',[ContentsController::class, 'deleteContent']);
+Route::post('/content/slot/status/{id}',[ContentsController::class, 'changeSlotStatus']);
 
 Route::post('/destinations/create',[DestinationsController::class, 'createDestination']);
 Route::get('/destinations',[DestinationsController::class, 'getDestinations']);

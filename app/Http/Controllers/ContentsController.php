@@ -16,6 +16,7 @@ class ContentsController extends Controller
             'status' => 'required',
         ]);
         $content = $request->all();
+
         if ($request->hasFile('background')) {
             $filename = uniqid() . $request->file('background')->getClientOriginalName();
             $request->file('background')->storeAs('public/images/', $filename);
@@ -91,6 +92,23 @@ class ContentsController extends Controller
             $path= 'public/images/'.$image;
             Storage::delete($path);
         }
-        return response()->json(['message'=>'Content updated permanently']);
+        return response()->json(['message'=>'Content deleted permanently']);
+    }
+    public function changeSlotStatus($id){
+        $content= Contents::find($id);
+        if($content){
+            if($content->status=='active'){
+                $content->update(['status'=>'inactive']);
+            }
+            else if($content->status=='inactive'){
+                $content->update(['status'=>'active']);
+            }
+
+            return response($content->status,200);
+        }
+        else{
+            return response()->json(['message'=> 'Content cannot be found!',400]);
+        }
+
     }
 }
