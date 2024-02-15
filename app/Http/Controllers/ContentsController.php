@@ -56,24 +56,41 @@ class ContentsController extends Controller
         $content = Contents::where('id', $id)->first();
         return $content;
     }
-    // public function editContent(Request $request){
-    //    $content = Contents::where('id',$request->id)->first();
+    public function editContent(Request $request){
+       $content = Contents::where('id',$request->id)->first();
 
-    //    $request->validate([
-    //     'page_name' => 'required',
-    //     'content_slots' => 'required',
-    //     'status' => 'required',
-    // ]);
-    // $updateData = $request->all();
-    // if($content->background){
-    //     db
-    // }
-    // if ($request->hasFile('background')) {
-    //     $filename = uniqid() . $request->file('background')->getClientOriginalName();
-    //     $request->file('background')->storeAs('public/images/', $filename);
-    //     $content['background'] = $filename;
-    // }
-    // Contents::create($content);
+       $request->validate([
+        'page_name' => 'required',
+        'content_slots' => 'required',
+        'status' => 'required',
+    ]);
+    $updateData = $request->all();
+    $photo = $request->file('background');
+    if ($photo) {
+        $existingImage = $content->background;
+        if(Storage::exists($existingImage)){
+            Storage::delete($existingImage);
+        }
+        $filename = uniqid() . $photo->getClientOriginalName();
+        $photo->storeAs('public/images/', $filename);
+        $updateData['background'] = $filename;
+    }
+    else {
+        // If no new image uploaded, retain the existing background image
+        unset($updateData['background']); // Remove 'background' key from updateData
+    }
+    $content->update($updateData);
+    return response()->json(['message'=>'Content Updated Successfully']);
+    }
+    public function deleteContent($id){
+        $content = Contents::find($id);
+        $content->delete();
 
-    // }
+        $image = $content->background;
+        if($image){
+            $path= 'public/images/'.$image;
+            Storage::delete($path);
+        }
+        return response()->json(['message'=>'Content updated permanently']);
+    }
 }
