@@ -16,20 +16,26 @@ class ContentsController extends Controller
             'status' => 'required',
         ]);
         $content = $request->all();
+        $existingContent = Contents::where('page_name', $request->page_name)
+            ->where('content_slots', $request->content_slots)
+            ->where('status', 'active')->get();
+        if ($existingContent) {
+            return response()->json(['message'=>'Active content already exists in page!Please deactivate the existing content']);
+        } else {
+            if ($request->hasFile('background')) {
+                $filename = uniqid() . $request->file('background')->getClientOriginalName();
+                $request->file('background')->storeAs('public/images/', $filename);
+                $content['background'] = $filename;
+            }
+            Contents::create($content);
 
-        if ($request->hasFile('background')) {
-            $filename = uniqid() . $request->file('background')->getClientOriginalName();
-            $request->file('background')->storeAs('public/images/', $filename);
-            $content['background'] = $filename;
+            return response()->json(['message' => 'New Content created successfully!']);
         }
-        Contents::create($content);
-
-        return response()->json(['message' => 'New Content created successfully!']);
     }
     public function getContents()
     {
         $contents = Contents::orderBy('page_name')
-        ->paginate(4);
+            ->paginate(4);
         return $contents;
     }
     public function getPageContent($page)
@@ -53,62 +59,62 @@ class ContentsController extends Controller
             return response('Error retrieving image: ' . $e->getMessage(), 500);
         }
     }
-    public function getContent($id){
+    public function getContent($id)
+    {
         $content = Contents::where('id', $id)->first();
         return $content;
     }
-    public function editContent(Request $request){
-       $content = Contents::where('id',$request->id)->first();
+    public function editContent(Request $request)
+    {
+        $content = Contents::where('id', $request->id)->first();
 
-       $request->validate([
-        'page_name' => 'required',
-        'content_slots' => 'required',
-        'status' => 'required',
-    ]);
-    $updateData = $request->all();
-    $photo = $request->file('background');
-    if ($photo) {
-        $existingImage = $content->background;
-        if(Storage::exists($existingImage)){
-            Storage::delete($existingImage);
+        $request->validate([
+            'page_name' => 'required',
+            'content_slots' => 'required',
+            'status' => 'required',
+        ]);
+        $updateData = $request->all();
+        $photo = $request->file('background');
+        if ($photo) {
+            $existingImage = $content->background;
+            if (Storage::exists($existingImage)) {
+                Storage::delete($existingImage);
+            }
+            $filename = uniqid() . $photo->getClientOriginalName();
+            $photo->storeAs('public/images/', $filename);
+            $updateData['background'] = $filename;
+        } else {
+            // If no new image uploaded, retain the existing background image
+            unset($updateData['background']); // Remove 'background' key from updateData
         }
-        $filename = uniqid() . $photo->getClientOriginalName();
-        $photo->storeAs('public/images/', $filename);
-        $updateData['background'] = $filename;
+        $content->update($updateData);
+        return response()->json(['message' => 'Content Updated Successfully']);
     }
-    else {
-        // If no new image uploaded, retain the existing background image
-        unset($updateData['background']); // Remove 'background' key from updateData
-    }
-    $content->update($updateData);
-    return response()->json(['message'=>'Content Updated Successfully']);
-    }
-    public function deleteContent($id){
+    public function deleteContent($id)
+    {
         $content = Contents::find($id);
         $content->delete();
 
         $image = $content->background;
-        if($image){
-            $path= 'public/images/'.$image;
+        if ($image) {
+            $path = 'public/images/' . $image;
             Storage::delete($path);
         }
-        return response()->json(['message'=>'Content deleted permanently']);
+        return response()->json(['message' => 'Content deleted permanently']);
     }
-    public function changeSlotStatus($id){
-        $content= Contents::find($id);
-        if($content){
-            if($content->status=='active'){
-                $content->update(['status'=>'inactive']);
-            }
-            else if($content->status=='inactive'){
-                $content->update(['status'=>'active']);
+    public function changeSlotStatus($id)
+    {
+        $content = Contents::find($id);
+        if ($content) {
+            if ($content->status == 'active') {
+                $content->update(['status' => 'inactive']);
+            } else if ($content->status == 'inactive') {
+                $content->update(['status' => 'active']);
             }
 
-            return response($content->status,200);
+            return response($content->status, 200);
+        } else {
+            return response()->json(['message' => 'Content cannot be found!', 400]);
         }
-        else{
-            return response()->json(['message'=> 'Content cannot be found!',400]);
-        }
-
     }
 }

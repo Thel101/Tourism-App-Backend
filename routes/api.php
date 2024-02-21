@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DestinationsController;
+use App\Http\Controllers\PlansController;
+use App\Http\Controllers\TrialFormController;
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
@@ -23,3 +25,8 @@ Route::get('/destinations/image/{filename}', [DestinationsController::class, 'ge
 Route::get('/destination/{id}',[DestinationsController::class,'getDestination']);
 Route::post('/destination/update',[DestinationsController::class, 'editDestination']);
 Route::delete('/destination/delete/{id}',[DestinationsController::class, 'deleteDestination']);
+
+Route::post('/plans/create',[PlansController::class, 'createPlan']);
+Route::get('/plans',[PlansController::class, 'getPlans']);
+
+Route::post('/forms/create',[TrialFormController::class, 'createForm']);
