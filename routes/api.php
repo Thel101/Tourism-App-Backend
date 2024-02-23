@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContentsController;
@@ -28,5 +29,8 @@ Route::delete('/destination/delete/{id}',[DestinationsController::class, 'delete
 
 Route::post('/plans/create',[PlansController::class, 'createPlan']);
 Route::get('/plans',[PlansController::class, 'getPlans']);
+Route::get('/plan/{id}',[PlansController::class, 'getPlanRequest']);
 
-Route::post('/forms/create',[TrialFormController::class, 'createForm']);
+Route::post('/contact/creaate',[ContactsController::class,'createContact']);
+Route::get('/contacts',[ContactsController::class, 'getContacts']);
+Route::get('/contact/{id}',[ContactsController::class, 'getContactDetail']);
