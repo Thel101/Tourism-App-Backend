@@ -1,10 +1,16 @@
 <?php
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactsController;
+>>>>>>> c1392d5 (added DestinationImage)
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContentsController;
+use App\Http\Controllers\DestinationImagesController;
 use App\Http\Controllers\DestinationsController;
 use App\Http\Controllers\DestinationImagesController;
 
@@ -35,6 +41,7 @@ Route::post('/contact/create',[ContactsController::class,'createContact']);
 Route::get('/contacts',[ContactsController::class, 'getContacts']);
 Route::get('/contact/{id}',[ContactsController::class, 'getContactDetail']);
 
+<<<<<<< HEAD
 Route::get('/contents/{page}',[ContentsController::class, 'getPageContent'])->name('home');
 Route::get('/contents/image/{filename}',[ContentsController::class,'getImage']);
 
@@ -43,4 +50,13 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+=======
+Route::post('/user/register', [AuthController::class, 'register']);
+Route::post('/user/login',[AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {{
+Route::get('/user',[AuthController::class,'user']);
+Route::post('/user/logout',[AuthController::class, 'logout']);
+}
+>>>>>>> c1392d5 (added DestinationImage)
 });

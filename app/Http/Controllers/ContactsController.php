@@ -28,7 +28,11 @@ class ContactsController extends Controller
 
         $contactData = $request->all();
         Contacts::create($contactData);
+<<<<<<< HEAD
         return response()->json(['message' => 'Contacts submitted successfully!'],200);
+=======
+        return response(['message'=> 'Contact successfully submitted!']);
+>>>>>>> c1392d5 (added DestinationImage)
     }
     public function getContacts()
     {

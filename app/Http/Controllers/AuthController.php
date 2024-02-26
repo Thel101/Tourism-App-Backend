@@ -7,13 +7,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Validator;
+=======
+>>>>>>> c1392d5 (added DestinationImage)
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
+<<<<<<< HEAD
         $validator = Validator::make(
             $request->all(),
             [
@@ -30,14 +34,21 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+=======
+>>>>>>> c1392d5 (added DestinationImage)
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+<<<<<<< HEAD
 
         if ($user) {
             return response()->json(['message' => 'User Registered Successfully!'], 200);
+=======
+        if ($user) {
+            return $user;
+>>>>>>> c1392d5 (added DestinationImage)
         }
     }
     public function login(Request $request)
@@ -49,6 +60,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+<<<<<<< HEAD
         /** @var User $user */
         $token = $user->createToken('token')->plainTextToken;
 
@@ -61,14 +73,28 @@ class AuthController extends Controller
         ])->withCookie($cookie);
         return $response;
 
+=======
+
+        $token = $user->createToken('token')->plainTextToken;
+
+        $cookie = cookie('jwt', $token, 60 * 24); // 1 day
+
+        return response([
+            'message' => $token
+        ])->withCookie($cookie);
+>>>>>>> c1392d5 (added DestinationImage)
     }
 
     public function user()
     {
         return Auth::user();
     }
+<<<<<<< HEAD
     public function logout()
     {
+=======
+    public function logout(){
+>>>>>>> c1392d5 (added DestinationImage)
         $cookie = Cookie::forget('jwt');
         return response([
             'message' => 'Logout Successfully!'
