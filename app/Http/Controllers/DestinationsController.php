@@ -41,6 +41,10 @@ class DestinationsController extends Controller
         $countries = Destinations::paginate(4);
         return $countries;
     }
+    public function getAllDestinations(){
+        $countries = Destinations::all();
+        return $countries;
+    }
     public function getDestination($id){
         $destination = Destinations::find($id);
         return $destination;

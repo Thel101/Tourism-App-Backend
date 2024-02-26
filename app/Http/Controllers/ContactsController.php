@@ -17,7 +17,7 @@ class ContactsController extends Controller
         ]);
         $contactData= $request->all();
         Contacts::create($contactData);
-        return response(['message'=> 'Contac successfully submitted!']);
+        return response(['message'=> 'Contact successfully submitted!']);
     }
     public function getContacts(){
         $contacts = Contacts::all();
