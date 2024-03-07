@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('reason');
             $table->string('comments');
+            $table->enum('status', ['new', 'replied']);
             $table->timestamps();
         });
     }

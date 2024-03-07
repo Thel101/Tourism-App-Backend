@@ -28,6 +28,7 @@ return new class extends Migration
             $table->json('expenses');
             $table->string('additional_comments');
             $table->boolean('subscribe')->default(false);
+            $table->enum('status',['new','replied']);
             $table->timestamps();
         });
     }

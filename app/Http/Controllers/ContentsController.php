@@ -16,11 +16,10 @@ class ContentsController extends Controller
             'status' => 'required',
         ]);
         $content = $request->all();
-        $existingContent = Contents::where('page_name', $request->page_name)
-            ->where('content_slots', $request->content_slots)
-            ->where('status', 'active')->get();
-        if ($existingContent) {
-            return response()->json(['message'=>'Active content already exists in page!Please deactivate the existing content']);
+        $existingContent = Contents::where('content_slots', $request->content_slots)
+            ->where('status', 1)->get();
+        if ($existingContent->isNotEmpty()) {
+            return response()->json(['message'=> 'Content already existing for content slot ' . $request->content_slots . '. Deactivate the existig content!'],422);
         } else {
             if ($request->hasFile('background')) {
                 $filename = uniqid() . $request->file('background')->getClientOriginalName();
@@ -29,7 +28,7 @@ class ContentsController extends Controller
             }
             Contents::create($content);
 
-            return response()->json(['message' => 'New Content created successfully!']);
+            return response()->json(['message' => 'New Content created successfully!'],200);
         }
     }
     public function getContents()
@@ -100,7 +99,7 @@ class ContentsController extends Controller
             $path = 'public/images/' . $image;
             Storage::delete($path);
         }
-        return response()->json(['message' => 'Content deleted permanently']);
+        return response()->json(['message' => 'Content deleted permanently'],200);
     }
     public function changeSlotStatus($id)
     {

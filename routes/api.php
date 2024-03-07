@@ -1,14 +1,13 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ContactsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ContentsController;
-use App\Http\Controllers\DestinationImagesController;
-use App\Http\Controllers\DestinationsController;
+use Illuminate\Mail\Mailables\Content;
 use App\Http\Controllers\PlansController;
-use App\Http\Controllers\TrialFormController;
+use App\Http\Controllers\ContactsController;
+use App\Http\Controllers\ContentsController;
+use App\Http\Controllers\DestinationsController;
+use App\Http\Controllers\DestinationImagesController;
 
 Route::post('/contents/create',[ContentsController::class, 'createContent']);
 Route::get('/contents',[ContentsController::class,'getContents']);
@@ -37,11 +36,10 @@ Route::post('/contact/create',[ContactsController::class,'createContact']);
 Route::get('/contacts',[ContactsController::class, 'getContacts']);
 Route::get('/contact/{id}',[ContactsController::class, 'getContactDetail']);
 
-Route::post('/user/register', [AuthController::class, 'register']);
-Route::post('/user/login',[AuthController::class, 'login']);
+Route::get('/contents/{page}',[ContentsController::class, 'getPageContent'])->name('home');
+Route::get('/contents/image/{filename}',[ContentsController::class,'getImage']);
 
-Route::middleware('auth:sanctum')->group(function () {{
-Route::get('/user',[AuthController::class,'user']);
-Route::post('/user/logout',[AuthController::class, 'logout']);
-}
+
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
+    return $request->user();
 });
