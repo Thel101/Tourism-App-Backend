@@ -8,6 +8,7 @@ use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DestinationsController;
 use App\Http\Controllers\DestinationImagesController;
+use App\Http\Controllers\UserController;
 
 Route::post('/contents/create',[ContentsController::class, 'createContent']);
 Route::get('/contents',[ContentsController::class,'getContents']);
@@ -40,6 +41,9 @@ Route::get('/contents/{page}',[ContentsController::class, 'getPageContent'])->na
 Route::get('/contents/image/{filename}',[ContentsController::class,'getImage']);
 
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('/list/users', [UserController::class, 'getUsers']);
 });

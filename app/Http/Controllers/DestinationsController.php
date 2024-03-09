@@ -23,7 +23,7 @@ class DestinationsController extends Controller
             $country['country_image']= $filename;
         }
         Destinations::create($country);
-        return response()->json(['message'=> 'New Desintation created successfully']);
+        return response()->json(['message'=> 'New Desintation created successfully'],200);
 
     }
     public function getDestinationImage($filename){
