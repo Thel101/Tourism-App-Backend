@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Mail\Mailables\Content;
 use App\Http\Controllers\PlansController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContentsController;
@@ -40,6 +39,8 @@ Route::get('/contents/{page}',[ContentsController::class, 'getPageContent'])->na
 Route::get('/contents/image/{filename}',[ContentsController::class,'getImage']);
 
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 });
